@@ -23,5 +23,3 @@ if($_SESSION["Session controller"]["webbläsare"] != $_SERVER["HTTP_USER_AGENT"]
 
 $login = new \controller\Controller();
 echo $login->myLogin();
-
-?>

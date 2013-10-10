@@ -2,6 +2,8 @@
 
 namespace controller;
 
+require_once 'HTMLPageView.php';
+
 	class Controller{
 		
 		/**
@@ -70,6 +72,8 @@ namespace controller;
 		 */
 		public $keepme;
 		
+		private $htmlPageView;
+				
 		/**
 		 * @var string
 		 */
@@ -84,6 +88,7 @@ namespace controller;
 			$this -> outMessage = null;
 			$this -> loginMessage = null;
 			$this -> keepme = null;
+			$this->htmlPageView = new \htmlpageview\View();
 		}
 		
 		/** Skickar userID till användarnamnsfältet i klassen firstPage i HTMLPageView 
@@ -98,7 +103,7 @@ namespace controller;
 			}
 		}
 		
-		/** Skickar passID till användarnamnsfältet i klassen firstPage i HTMLPageView 
+		/** Skickar passID till användarnamnsfältet i klassen firstPage i HTMLPageView
 		 * @return $passID
 		 * **/
 		
@@ -114,7 +119,7 @@ namespace controller;
 
 			$_SESSION['mySess'] = true;
 			
-			echo $this->loginMessage;
+			$this->loginMessage;
 
 		}
 		
@@ -125,53 +130,54 @@ namespace controller;
 		public function errorMessages(){
 					
 			if($this->user == null){
-					
-				echo $this->errorMessage = "<p>Användarnamn saknas</p>";
+				
+				$this->htmlPageView->errorMessage = "<p>Användarnamn saknas</p>";
 			}
 			else if($this->pass == null){
 					
-				echo $this->errorMessage = "<p>Lösenord saknas</p>";
+				$this->htmlPageView->errorMessage = "<p>Lösenord saknas</p>";
 			}
 			else if($this->user != $this->userName || $this->pass != $this->passWord){
-				echo $this->errorMessage = "<p>Användarnamn eller Lösenord är felaktig</p>";
+				$this->htmlPageView->errorMessage = "<p>Användarnamn eller Lösenord är felaktig</p>";
 			}
 		}
 		// Kontrollerar inloggning
 		private function checkMyLogin(){
 			
-			$ViewHTMLPage = new \htmlpageview\View();
+
 			
 			if(isset($_SESSION['mySess'])){
 			
 				if(isset($_POST["autologinID"])){
-						
-					echo $this->keepme = "<p>Dina uppgifter är sparade</p>";
+					
+					$this->htmlPageView->keepme = "<p>Dina uppgifter är sparade</p>";
 					$this->MakeCookie();
 				}
-				echo $ViewHTMLPage->loginPage();
+				echo $this->htmlPageView->loginPage();
 			}
 			else{
 				
-				echo $ViewHTMLPage->firstPage();
+				echo $this->htmlPageView->firstPage();
 			}
 		}
 		
 		private function MakeCookie(){
 			
 			$cookieTime = time() + 25;
-			$mySite = "/latana.se/labb_2/index.php";
+			$mySite = "latana.se";
 			
 			file_put_contents("cookieTime.txt", "$cookieTime");
 			
 	 		setcookie($this->cookieUser, $this->userName, $cookieTime);
 			$cryptPass = md5($this->passWord, $this->safeKey);
 		
-			setcookie($this->cookiePass, $cryptPass, $cookieTime);
+			$value = setcookie($this->cookiePass, $cryptPass, $cookieTime);
+			
 	 	}
 		// Kollar av kakorna
 		private function checkMyCookies(){
 						
-			if(isset($_COOKIE["cookieUser"])){
+			if(isset($_COOKIE[$this->cookieUser])){
 			
 				$timeFile = file_get_contents("cookieTime.txt");
 				// Kollar ifall kakan stämmer
@@ -180,7 +186,7 @@ namespace controller;
 					$_COOKIE[$this->cookiePass] == md5($this->passWord,
 					$this->safeKey)){
 			
-					echo $this->cookieMessage = "<p>Du blev inloggad med cookie</p>";
+					$this->htmlPageView->cookieMessage = "<p>Du blev inloggad med cookie</p>";
 					$this->loginsuccess();
 				}
 				// Kollar ifall kakan är fel
@@ -189,7 +195,7 @@ namespace controller;
 				|| $_COOKIE[$this->cookiePass] !== md5($this->passWord, $this->safeKey
 				|| $timeFile < time())){
 					
-					echo $this->cookieMessage = "Felaktiga uppgifter i cookie";
+					$this->htmlPageView->cookieMessage = "Felaktiga uppgifter i cookie";
 					setcookie("cookieUser", "", time()-9999999);
 					setcookie("cookiePass", "", time()-9999999);
 				}
@@ -197,8 +203,6 @@ namespace controller;
 		}
 		// Testar det användaren matat in
 		public function myLogin(){
-			
-			$ViewHTMLPage = new \htmlpageview\View();
 			
 			$this->checkMyCookies();
 			
@@ -211,11 +215,10 @@ namespace controller;
 				// Om uppgifterna stämmer
 				if($this->user == $this->userName && $this->pass == $this->passWord){
 						
-					$this->loginMessage = "<p>inloggning lyckades</p>";
+					$this->htmlPageView->loginMessage = "<p>inloggning lyckades</p>";
 					$this->loginsuccess();
 				}
 			}
 			$this->checkMyLogin();
 		}
 	}
-?>

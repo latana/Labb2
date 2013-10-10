@@ -14,4 +14,3 @@ namespace logout; // Kommer hit när man trycker på logga ut
 	
 	header('Location: index.php');
 	
-?>

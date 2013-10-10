@@ -6,13 +6,18 @@ require_once("controller.php");
 
 	class View{
 		
+		public $errorMessage;
+		public $loginMessage;
+		public $keepme;
+		public $cookieMessage;
 		/**
 		 * 	@return html string
 		 * 	@var errorMessage = String
-		 * @var outMessage = String
+		 *  @var outMessage = String
 		 */
 		
-		public function firstPage($errorMessage = null, $outMessage = null){
+		
+		public function firstPage(){
 			
 			$html = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 	        <html xmlns='http://www.w3.org/1999/xhtml'> 
@@ -21,6 +26,7 @@ require_once("controller.php");
 	             <meta http-equiv='content-type' content='text/html; charset=utf-8' />
 	          </head> 
 	          <body>
+	          ".$this->errorMessage."
 	            <h1>Labration 2 ms223eq</h1><h2>Ej Inloggad</h2>
 				<p id='loggout'> </p>";
 				
@@ -60,7 +66,7 @@ require_once("controller.php");
 		 * 	@keepme
 		 */
 		
-		public function loginPage($loginMessage = null, $keepme = null){
+		public function loginPage(){
 				
 			return "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'> 
 		        <html xmlns='http://www.w3.org/1999/xhtml'> 
@@ -69,7 +75,7 @@ require_once("controller.php");
 			    <meta http-equiv='content-type' content='text/html; charset=utf-8' />   
 			    </head> 
 			    <body>
-			    ".$loginMessage. $keepme."
+			    ".$this->loginMessage. $this->keepme. $this->cookieMessage."
 			    <h1>Laboration 2 ms223eq</h1>
 				<h2>Admin är inloggad</h2>
 				<p><a href='logout.php'>Logga ut</a></p>
@@ -78,5 +84,3 @@ require_once("controller.php");
 			    </html>";
 		}
 	}
-
-?>
